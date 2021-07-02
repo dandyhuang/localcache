@@ -100,11 +100,13 @@ class LocalCacheSHM {
   const T* GetReadData() {
     SwapBuff* pEntity = GetEntity();
     T* pCacheData = (T*)(pEntity->szBuffer + pEntity->nDataSize * pEntity->nReadIndex);
+
     if (pCacheData == NULL) {
       SendWarning("共享内存：读取数据， buffer指针为空，请及时确认Cache数据");
       throw("系统出了一点小问题，请稍后再试");
     }
-    printf("get read index:%d", pEntity->nReadIndex);
+    // printf("get read index:%d, %p, %p, %p, %p\n", pEntity->nReadIndex, &(pEntity->szBuffer[0]), &(pEntity->szBuffer[1]),
+      //  *pCacheData, &pEntity->szBuffer);
     return pCacheData;
   }
 
