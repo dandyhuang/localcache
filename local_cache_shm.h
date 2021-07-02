@@ -114,7 +114,7 @@ class LocalCacheSHM {
       InfoLog("%s|加写锁失败", __FUNCTION__);
 
       time_t nLastLockTime = pEntity->nWriteLock;
-      const string& strReleaseTime = 100;
+      const string& strReleaseTime = "100";
       int nReleaseTime = atoi(strReleaseTime.c_str());
       if (nReleaseTime < 600) {  // 10分钟,设置太小会导致误解锁,所以不能设置太小
         nReleaseTime = 600;
