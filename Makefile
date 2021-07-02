@@ -9,10 +9,10 @@ OBJ = local_cache_test.o
 BIN=test
 all: $(BIN)
 $(BIN):$(OBJ)
-    $(CXX) $(CFLAGS) $^ -o $@
-#%.o:%.cpp
-.cpp.o:
-    $(CXX) $(CFLAGS) -c $< -o $@
+    ${CXX} ${DLFLAGS} ${LDFLAGS} ${OBJECTS} ${LIBS}  -o ${BIN}
+
+%.o: %.cpp
+	${CXX} -c ${CFLAGS} $(INCLUDE) $(CPPINCS) $< -o $@
 
 clean:
-    rm -f *.o main
+    rm -f *.o  $(BIN) 
