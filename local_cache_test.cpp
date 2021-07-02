@@ -9,7 +9,7 @@
  ***********************************************************************/
 
 #include "local_cache_test.h"
-
+#include <unistd.h>
 #include <thread>
 namespace LOCALCACHE {
 CTestDataCache::CTestDataCache() : init_(false) {}
@@ -23,7 +23,7 @@ void CTestDataCache::CheckInit() {
   }
 }
 
-int CTestDataCache::Get(std::string* value) {
+int CTestDataCache::Get(std::string* value, int type) {
   CheckInit();
 
   value->clear();
@@ -34,7 +34,8 @@ int CTestDataCache::Get(std::string* value) {
     return -1;
   }
   // 模拟value读取慢场景
-  usleep(10);
+  if (type == 1)
+     usleep(10003);
   //这里假设延迟很严重，写也开始操作这块内存，读写就有线程安全问题了
   value->append(p_test_data->data, p_test_data->data + p_test_data->size);
   return 0;
@@ -81,7 +82,7 @@ void threadGet() {
     test.Set("777777777777777777777");
     std::string value;
     test.Get(&value);
-    printf("threadGet value:\n", value);
+    printf("threadGet value:%s\n", value.c_str());
   }
 }
 
@@ -90,8 +91,9 @@ void threadSet() {
   while (1) {
     test.Set("dddddssafaaaaaaaaaaaaa");
     std::string value;
-    test.Get(&value);
-    printf("threadSet value:\n", value);
+    test.Get(&value, 1);
+    // 读取的确实都是t1的数据
+    printf("threadSet value:%s\n", value.c_str());
   }
 }
 

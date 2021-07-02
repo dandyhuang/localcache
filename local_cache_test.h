@@ -35,7 +35,7 @@ class CTestDataCache {
   ~CTestDataCache() {}
 
  public:
-  int Get(std::string* sValue);
+  int Get(std::string* sValue, int type = 0);
   int Set(const std::string& sValue);
 
  private:

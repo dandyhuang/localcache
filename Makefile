@@ -5,7 +5,7 @@ CPPFLAGS= -g --std=c++11 -Wall -O2 -fPIC
 CFLAGS := $(CPPFLAGS)
 
 OBJ = local_cache_test.o
-
+LIBS = -lpthread
 BIN=test
 $(BIN): $(OBJ)
 	${CXX} ${CFLAGS} ${LDFLAGS} ${OBJ} ${LIBS} -o ${BIN}
