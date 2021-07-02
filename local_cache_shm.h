@@ -58,7 +58,7 @@ class LocalCacheSHM {
       throw("系统出了一点小问题，请稍后再试");
     }
 
-    m_pShmHeader = reinterpret_cast<ShmHeader*> pShmHeader;
+    m_pShmHeader = reinterpret_cast<ShmHeader*>(pShmHeader);
 
     // 这段逻辑只有在清空共享内存的时候,或者某一台机器首次被创建的时候调用
     // 如果是新创建的,需要初识化,初始化的进程将init位设置为1.其他进程等待初识化完成
@@ -88,12 +88,12 @@ class LocalCacheSHM {
 
   // 得到实体头部交换buff的首地址
   SwapBuff* GetEntity() {
-    char* pEntity = ((reinterpret_cast<char*>)m_pShmHeader) + m_pShmHeader->nHeaderSize;
+    char* pEntity = (reinterpret_cast<char*>(m_pShmHeader)) + m_pShmHeader->nHeaderSize;
     if (pEntity == NULL) {
       SendWarning("共享内存：获取swapping buffer指针为空, 请及时确认Cache数据");
       throw("系统出了一点小问题，请稍后再试");
     }
-    return (reinterpret_cast<SwapBuff*>)pEntity;
+    return reinterpret_cast<SwapBuff*>(pEntity);
   }
 
   // 读取 可读部分的数据
@@ -114,7 +114,7 @@ class LocalCacheSHM {
       InfoLog("%s|加写锁失败", __FUNCTION__);
 
       time_t nLastLockTime = pEntity->nWriteLock;
-      const string& strReleaseTime = GetConfValue("recom_fund", "deal_lock_release_time", "3");
+      const string& strReleaseTime = 100;
       int nReleaseTime = atoi(strReleaseTime.c_str());
       if (nReleaseTime < 600) {  // 10分钟,设置太小会导致误解锁,所以不能设置太小
         nReleaseTime = 600;

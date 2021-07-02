@@ -14,7 +14,7 @@ CTestDataCache::CTestDataCache() : init_(false) {}
 
 void CTestDataCache::CheckInit() {
   if (!init_) {
-    const std::string& shm_key = 1234;
+    const std::string& shm_key = "1234";
     local_cache_shm_.Init(atoi(shm_key.c_str()));
 
     init_ = true;
