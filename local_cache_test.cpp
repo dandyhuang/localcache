@@ -9,6 +9,8 @@
  ***********************************************************************/
 
 #include "local_cache_test.h"
+
+#include <thread>
 namespace LOCALCACHE {
 CTestDataCache::CTestDataCache() : init_(false) {}
 
@@ -31,6 +33,8 @@ int CTestDataCache::Get(std::string* value) {
     printf("读取共享内存, ptr of read buffer is NULL \n");
     return -1;
   }
+  // 模拟value读取慢场景
+  usleep(10);
   //这里假设延迟很严重，写也开始操作这块内存，读写就有线程安全问题了
   value->append(p_test_data->data, p_test_data->data + p_test_data->size);
   return 0;
@@ -71,7 +75,30 @@ int CTestDataCache::Set(const std::string& value) {
 }
 }  // namespace LOCALCACHE
 
-int main() {
+void threadGet() {
   LOCALCACHE::CTestDataCache test;
+  while (1) {
+    test.Set("777777777777777777777");
+    std::string value;
+    test.Get(&value);
+    printf("threadGet value:\n", value);
+  }
+}
+
+void threadSet() {
+  LOCALCACHE::CTestDataCache test;
+  while (1) {
+    test.Set("dddddssafaaaaaaaaaaaaa");
+    std::string value;
+    test.Get(&value);
+    printf("threadSet value:\n", value);
+  }
+}
+
+int main() {
+  std::thread t1(threadGet);
+  std::thread t2(threadSet);
+  t2.join();
+  t1.join();
   return 0;
 }

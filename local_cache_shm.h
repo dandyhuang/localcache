@@ -104,6 +104,7 @@ class LocalCacheSHM {
       SendWarning("共享内存：读取数据， buffer指针为空，请及时确认Cache数据");
       throw("系统出了一点小问题，请稍后再试");
     }
+    printf("get read index:%d", pEntity->nReadIndex);
     return pCacheData;
   }
 
@@ -149,7 +150,8 @@ class LocalCacheSHM {
     uint8_t nWriteIndex = GetWriteIndex(pEntity->nReadIndex);
     T* pCacheData = (T*)(pEntity->szBuffer + pEntity->nDataSize * nWriteIndex);
 
-    InfoLog("%s|加写锁成功,nWriteIndex=%d", __FUNCTION__, nWriteIndex);
+    InfoLog("%s|加写锁成功,nWriteIndex=%d, nReadIndex=%d", __FUNCTION__, nWriteIndex,
+            pEntity->nReadIndex);
 
     return pCacheData;
   }
